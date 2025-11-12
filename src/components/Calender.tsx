@@ -4,7 +4,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 import FullCalendar from "@fullcalendar/react";
 import React, { useEffect, useRef, useState } from "react";
-import EventModal from "./EventModel";
+import EventModel from "./EventModel";
 export interface EventType {
   id: string; // unique id for each event
   title: string;
@@ -19,7 +19,6 @@ const Calender = () => {
   const [start, setStart] = useState<string>("");
   const [isActionModel, setIsActionModel] = useState<boolean>(false);
   const [updatedData, setUpdatedData] = useState<EventType | null>(null);
-
   //   const events: EventType[] = [
   //     {
   //       title: "Team Meeting",
@@ -62,21 +61,32 @@ const Calender = () => {
 
   const modelRef = useRef(null);
   const handleDateClick = (info: any) => {
-    // console.log(info.date)
+    console.log(info.date)
     const date = new Date(info.date);
-    console.log("Withougth convert", date);
-
-    console.log("After converting in isoString", date.toISOString());
-    setStart(date.toISOString().slice(0, 16));
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const formatted = `${year}-${String(month).padStart(2, "0")}-${String(
+      day
+    ).padStart(2, "0")} ${String(hours).padStart(2, "0")}:${String(
+      minutes
+    ).padStart(2, "0")}`;
+    console.log(formatted);
+    console.log(date.toISOString().slice(0, 16));
+    setStart(formatted);
     setIsOpen(true);
   };
   const handleEventClick = (info: any) => {
+    const startDate = new Date(info.event.startStr);
+    const endDate = new Date(info.event.endStr);
     setUpdatedData({
       id: info.event.id,
       title: info.event.title,
       description: info.event.extendedProps.description,
-      start: info.event.startStr,
-      end: info.event.endStr,
+      start: startDate.toISOString().slice(0, 16),
+      end: endDate.toISOString().slice(0, 16),
       color: info.event.backgroundColor,
     });
     setIsActionModel(true);
@@ -130,7 +140,7 @@ const Calender = () => {
       {isOpen && (
         <div className="model">
           {" "}
-          <EventModal
+          <EventModel
             modelRef={modelRef}
             onClose={() => {
               setIsOpen(false);

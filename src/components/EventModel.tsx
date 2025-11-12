@@ -13,7 +13,7 @@ interface ModelType {
   actionModel: boolean;
   startDate: string | null;
 }
-const EventModal: React.FC<ModelType> = ({
+const EventModel: React.FC<ModelType> = ({
   onClose,
   setEventes,
   actionModel,
@@ -23,7 +23,6 @@ const EventModal: React.FC<ModelType> = ({
   startDate,
   modelRef,
 }) => {
-  console.log(startDate);
   const validationSchema = Yup.object({
     title: Yup.string()
       .required("Title is required")
@@ -45,6 +44,7 @@ const EventModal: React.FC<ModelType> = ({
     color: Yup.string().required("Color tag is required"),
   });
   const { values, handleBlur, handleChange, handleSubmit, touched, errors } =
+  
     useFormik({
       enableReinitialize: true,
       initialValues: {
@@ -58,6 +58,7 @@ const EventModal: React.FC<ModelType> = ({
       validationSchema,
       onSubmit: (values) => {
         if (updatedData) {
+          
           setEventes((prev) =>
             prev.map((ev) =>
               ev.id === updatedData.id ? { ...values, id: updatedData.id } : ev
@@ -72,6 +73,7 @@ const EventModal: React.FC<ModelType> = ({
         onClose();
       },
     });
+  console.log("updated data",updatedData);
   const handleDelete = () => {
     if (updatedData) {
       setEventes((prev) => prev.filter((ev) => ev.id != updatedData.id));
@@ -267,4 +269,4 @@ const EventModal: React.FC<ModelType> = ({
   );
 };
 
-export default EventModal;
+export default EventModel;
